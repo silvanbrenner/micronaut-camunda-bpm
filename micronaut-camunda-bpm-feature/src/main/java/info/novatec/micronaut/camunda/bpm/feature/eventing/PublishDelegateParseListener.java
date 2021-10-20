@@ -18,6 +18,7 @@ package info.novatec.micronaut.camunda.bpm.feature.eventing;
 
 import info.novatec.micronaut.camunda.bpm.feature.Configuration;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import jakarta.inject.Singleton;
 import org.camunda.bpm.engine.delegate.ExecutionListener;
 import org.camunda.bpm.engine.delegate.TaskListener;
 import org.camunda.bpm.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
@@ -29,10 +30,7 @@ import org.camunda.bpm.engine.impl.pvm.process.TransitionImpl;
 import org.camunda.bpm.engine.impl.task.TaskDefinition;
 import org.camunda.bpm.engine.impl.util.xml.Element;
 import org.camunda.bpm.engine.impl.variable.VariableDeclaration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
 

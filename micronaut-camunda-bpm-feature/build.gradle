@@ -57,11 +57,11 @@ dependencies {
     // Test
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testImplementation("org.assertj:assertj-core")
-    testImplementation("org.mockito:mockito-core:3.12.1")
+    testImplementation("org.mockito:mockito-core:4.0.0")
     testImplementation("ch.qos.logback:logback-classic")
     testRuntimeOnly("com.h2database:h2")
     testRuntimeOnly("io.micronaut:micronaut-http-server-netty")
-    testRuntimeOnly("org.codehaus.groovy:groovy-all:3.0.8") // as script engine
+    testRuntimeOnly("org.codehaus.groovy:groovy-all:3.0.9") // as script engine
 }
 
 java {
@@ -72,7 +72,7 @@ java {
 }
 
 test {
-    jvmArgs '-Xmx1g'
+    jvmArgs '-Xmx1536m'
 }
 
 tasks {
@@ -132,4 +132,9 @@ signing {
 
 configurations {
     testArtifacts
+}
+
+// Prevent error on "./gradlew publish", see also https://docs.gradle.org/7.0/userguide/publishing_setup.html#sec:suppressing_validation_errors
+tasks.withType(GenerateModuleMetadata).configureEach {
+    suppressedValidationErrors.add('enforced-platform')
 }

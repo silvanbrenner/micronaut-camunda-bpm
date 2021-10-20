@@ -90,21 +90,21 @@ Here are some example applications:
 We officially support the following JDKs:
 * JDK 8 (LTS)
 * JDK 11 (LTS)
-* JDK 16 (the latest version supported by Micronaut)
+* JDK 17 (LTS)
 
 ## Dependency Management
 
 The Camunda integration works with both Gradle and Maven, but we recommend using Gradle because it has better Micronaut Support.
 
 You have the following options to integrate the Camunda integration:
-* Create a new Micronaut project using [Micronaut Launch](https://micronaut.io/launch) and select the "camunda" feature. If you don't select any database then an in-memory H2 will be included by default.
+* Create a new Micronaut project using [Micronaut Launch](https://micronaut.io/launch?name=micronaut-camunda&features=camunda) and check that the "camunda" feature is selected. If you don't select any database then an in-memory H2 will be included by default.
 * Manually add the dependency to an existing Micronaut project:
   <details>
   <summary>Click to show Gradle configuration</summary>
 
   Add the dependency to the build.gradle file:
   ```groovy
-  implementation("info.novatec:micronaut-camunda-bpm-feature:1.0.1")
+  implementation("info.novatec:micronaut-camunda-bpm-feature:2.1.0")
   runtimeOnly("com.h2database:h2")
   ```
   </details>
@@ -117,7 +117,7 @@ You have the following options to integrate the Camunda integration:
   <dependency>
     <groupId>info.novatec</groupId>
     <artifactId>micronaut-camunda-bpm-feature</artifactId>
-    <version>1.0.1</version>
+    <version>2.1.0</version>
   </dependency>
   <dependency>
     <groupId>com.h2database</groupId>
@@ -142,7 +142,7 @@ When starting the application you'll see the log output: `Deploying model: class
 
 Inject the process engine or any of the Camunda services using constructor injection:
 ```java
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.RuntimeService;
 
@@ -170,7 +170,7 @@ You can then for example use the `runtimeService` to start new processes instanc
 To invoke a Java delegate create a bean and reference it in your process model using an expression, e.g. `${loggerDelegate}`:
 
 ```java
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import org.camunda.bpm.engine.delegate.DelegateExecution;
 import org.camunda.bpm.engine.delegate.JavaDelegate;
 
@@ -187,7 +187,7 @@ public class LoggerDelegate implements JavaDelegate {
 ```
 
 Internally, the bean will be resolved using `io.micronaut.inject.qualifiers.Qualifiers.byName(...)`.
-Therefore, you can use the annotation `javax.inject.Named` to define an explicit bean name and use that name in your expression.
+Therefore, you can use the annotation `jakarta.inject.Named` to define an explicit bean name and use that name in your expression.
 
 ## Configuration
 
@@ -429,13 +429,13 @@ on how to do that. Keep in mind using the correct version of the libraries.
 
 In `build.gradle`:
 ```groovy
-implementation("info.novatec:micronaut-camunda-bpm-feature:1.0.1") {
+implementation("info.novatec:micronaut-camunda-bpm-feature:2.1.0") {
     exclude group: 'org.camunda.bpm.webapp', module: 'camunda-webapp-webjar'
     exclude group: 'org.camunda.bpm', module: 'camunda-engine'
 }
 
-implementation("org.camunda.bpm.webapp:camunda-webapp-webjar-ee:7.15.0-ee")
-implementation("org.camunda.bpm:camunda-engine:7.15.0-ee")
+implementation("org.camunda.bpm.webapp:camunda-webapp-webjar-ee:7.16.0-ee")
+implementation("org.camunda.bpm:camunda-engine:7.16.0-ee")
 ```
 </details>
 <details>
@@ -446,7 +446,7 @@ In `pom.xml`:
 <dependency>
   <groupId>info.novatec</groupId>
   <artifactId>micronaut-camunda-bpm-feature</artifactId>
-  <version>1.0.1</version>
+  <version>2.1.0</version>
   <exclusions>
     <exclusion>
       <groupId>org.camunda.bpm.webapp</groupId>
@@ -461,12 +461,12 @@ In `pom.xml`:
 <dependency>
   <groupId>org.camunda.bpm.webapp</groupId>
   <artifactId>camunda-webapp-webjar-ee</artifactId>
-  <version>7.15.0-ee</version>
+  <version>7.16.0-ee</version>
 </dependency>
 <dependency>
   <groupId>org.camunda.bpm</groupId>
   <artifactId>camunda-engine</artifactId>
-  <version>7.15.0-ee</version>
+  <version>7.16.0-ee</version>
 </dependency>
 ```
 </details>
@@ -488,19 +488,19 @@ Every bean that implements the interface `org.camunda.bpm.engine.impl.cfg.Proces
 
 You can either
 * implement a bean factory with `@io.micronaut.context.annotation.Factory` and add one or more methods returning `ProcessEnginePlugin` instances and annotate each with a bean scope annotation
-* annotate your class with `@javax.inject.Singleton` and implement the `ProcessEnginePlugin` interface
+* annotate your class with `@jakarta.inject.Singleton` and implement the `ProcessEnginePlugin` interface
 
 Example with the LDAP plugin:
 
 ```groovy
-implementation("org.camunda.bpm.identity:camunda-identity-ldap:7.15.0")
+implementation("org.camunda.bpm.identity:camunda-identity-ldap:7.16.0")
 ```
 
 ```java
 import io.micronaut.context.annotation.Factory;
 import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin;
 import org.camunda.bpm.identity.impl.ldap.plugin.LdapIdentityProviderPlugin;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Factory
 public class PluginConfiguration {
@@ -527,7 +527,7 @@ With the following bean it's possible to customize the process engine configurat
 import info.novatec.micronaut.camunda.bpm.feature.MnProcessEngineConfiguration;
 import info.novatec.micronaut.camunda.bpm.feature.ProcessEngineConfigurationCustomizer;
 import io.micronaut.context.annotation.Replaces;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @Replaces(ProcessEngineConfigurationCustomizer.class)
@@ -546,7 +546,7 @@ With the following bean it's possible to customize the job executor:
 import info.novatec.micronaut.camunda.bpm.feature.JobExecutorCustomizer;
 import info.novatec.micronaut.camunda.bpm.feature.MnJobExecutor;
 import io.micronaut.context.annotation.Replaces;
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 
 @Singleton
 @Replaces(JobExecutorCustomizer.class)
@@ -647,7 +647,7 @@ event streams:
 * Execution: All execution events (Activities are Started, Ended and Transitions are being taken)
 * History: All history events
 
-### Configuration
+### Configuration of Eventing Bridge
 ```yaml
 camunda:
   eventing:
@@ -709,7 +709,7 @@ Process tests can easily be implemented with JUnit 5 by adding the `camunda-bpm-
 <summary>Click to show Gradle dependencies</summary>
 
 ```groovy
-testImplementation("org.camunda.bpm.assert:camunda-bpm-assert:10.0.0")
+testImplementation("org.camunda.bpm.assert:camunda-bpm-assert:13.0.0")
 testImplementation("org.assertj:assertj-core")
 ```
 </details>
@@ -721,13 +721,13 @@ testImplementation("org.assertj:assertj-core")
 <dependency>
   <groupId>org.camunda.bpm.assert</groupId>
   <artifactId>camunda-bpm-assert</artifactId>
-  <version>10.0.0</version>
+  <version>13.0.0</version>
   <scope>test</scope>
 </dependency>
 <dependency>
 <groupId>org.assertj</groupId>
   <artifactId>assertj-core</artifactId>
-  <version>3.16.1</version>
+  <version>3.20.2</version>
   <scope>test</scope>
 </dependency>
 ```
@@ -743,7 +743,7 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.camunda.bpm.engine.test.assertions.bpmn.BpmnAwareTests.*;
 
@@ -900,13 +900,16 @@ Other combinations might also work but have not been tested.
 
 | Release |Micronaut | Camunda |
 |--------|--------|--------|
-|  1.0.1 | 2.5.12 | 7.15.0 |
+|  2.1.0 | 3.1.0  | 7.16.0 |
 
 <details>
 <summary>Click to see older releases</summary>
 
 | Release |Micronaut | Camunda |
-|--------|-------|--------|
+|--------|--------|--------|
+|  2.0.0 | 3.0.0  | 7.15.0 |
+|  1.1.0 | 2.5.12 | 7.15.0 |
+|  1.0.1 | 2.5.12 | 7.15.0 |
 |  1.0.0 | 2.5.9 | 7.15.0 |
 | 0.24.0 | 2.5.1 | 7.15.0 |
 | 0.23.0 | 2.4.3 | 7.15.0 |

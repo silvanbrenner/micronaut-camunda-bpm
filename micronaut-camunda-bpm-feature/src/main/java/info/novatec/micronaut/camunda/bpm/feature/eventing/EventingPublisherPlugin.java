@@ -18,7 +18,7 @@ package info.novatec.micronaut.camunda.bpm.feature.eventing;
 
 import info.novatec.micronaut.camunda.bpm.feature.Configuration;
 import io.micronaut.context.annotation.Requires;
-import io.micronaut.context.event.ApplicationEventPublisher;
+import jakarta.inject.Singleton;
 import org.camunda.bpm.engine.ProcessEngine;
 import org.camunda.bpm.engine.impl.bpmn.parser.BpmnParseListener;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
@@ -27,7 +27,6 @@ import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.util.ArrayList;
 
 /**
@@ -43,13 +42,11 @@ public class EventingPublisherPlugin implements ProcessEnginePlugin {
     private static final Logger log = LoggerFactory.getLogger(EventingPublisherPlugin.class);
 
     protected final Configuration configuration;
-    protected final ApplicationEventPublisher publisher;
     protected final BpmnParseListener publishDelegateParseListener;
     protected final HistoryEventHandler publishHistoryEventHandler;
 
-    public EventingPublisherPlugin(Configuration configuration, ApplicationEventPublisher publisher, BpmnParseListener publishDelegateParseListener, HistoryEventHandler publishHistoryEventHandler) {
+    public EventingPublisherPlugin(Configuration configuration, BpmnParseListener publishDelegateParseListener, HistoryEventHandler publishHistoryEventHandler) {
         this.configuration = configuration;
-        this.publisher = publisher;
         this.publishDelegateParseListener = publishDelegateParseListener;
         this.publishHistoryEventHandler = publishHistoryEventHandler;
     }

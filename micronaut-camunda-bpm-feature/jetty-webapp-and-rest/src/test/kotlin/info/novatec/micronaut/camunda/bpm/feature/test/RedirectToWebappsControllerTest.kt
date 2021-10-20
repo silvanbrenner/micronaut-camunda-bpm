@@ -16,15 +16,15 @@
 package info.novatec.micronaut.camunda.bpm.feature.test
 
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.micronaut.test.support.TestPropertyProvider
+import jakarta.inject.Inject
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import javax.inject.Inject
 
 @MicronautTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -39,13 +39,13 @@ class RedirectToWebappsControllerTest : TestPropertyProvider {
 
     @Inject
     @field:Client("/")
-    lateinit var client: RxHttpClient
+    lateinit var client: HttpClient
 
     @Test
     fun `redirect is disabled because webapps are disabled`() {
         val request: HttpRequest<String> = HttpRequest.GET("/")
         assertThrows(HttpClientResponseException::class.java) {
-            client.toBlocking().exchange<String, Any>(request)
+            client.toBlocking().retrieve(request)
         }
     }
 }

@@ -18,19 +18,18 @@ package info.novatec.micronaut.camunda.bpm.feature.test
 import info.novatec.micronaut.camunda.bpm.feature.Configuration
 import io.micronaut.context.annotation.Requires
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
 import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest
 import io.micronaut.test.support.TestPropertyProvider
+import jakarta.inject.Inject
 import org.eclipse.jetty.server.Server
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import javax.inject.Inject
 
 /**
  * Test the customized Webapps on Jetty.
@@ -55,7 +54,7 @@ class JettyWebappCustomConfigurationTest : TestPropertyProvider {
 
     @Inject
     @field:Client("/")
-    lateinit var client: RxHttpClient
+    lateinit var client: HttpClient
 
     @Test
     fun `redirect is disabled by application configuration`() {
@@ -68,28 +67,28 @@ class JettyWebappCustomConfigurationTest : TestPropertyProvider {
     @Test
     fun `welcome app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/welcome/default")
-        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
+        val res = client.toBlocking().exchange<String, Any>(request)
         assertEquals(HttpStatus.OK, res.status())
     }
 
     @Test
     fun `admin app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/admin/default")
-        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
+        val res = client.toBlocking().exchange<String, Any>(request)
         assertEquals(HttpStatus.OK, res.status())
     }
 
     @Test
     fun `cockpit app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/cockpit/default")
-        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
+        val res = client.toBlocking().exchange<String, Any>(request)
         assertEquals(HttpStatus.OK, res.status())
     }
 
     @Test
     fun `tasklist app is available` () {
         val request: HttpRequest<String> = HttpRequest.GET(configuration.webapps.contextPath + "/app/tasklist/default")
-        val res: HttpResponse<*> = client.toBlocking().exchange<String, Any>(request)
+        val res = client.toBlocking().exchange<String, Any>(request)
         assertEquals(HttpStatus.OK, res.status())
     }
 }
